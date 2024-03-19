@@ -20,6 +20,10 @@ class MeuApp(App):
             collection = db['workout']
         except:
             print('ERROR AT THE CONNECTION TO BD')
+        resultadoQuery=collection.find()
+        print('Resultado da query:',resultadoQuery)
+        for resultado in resultadoQuery:
+            print('Resultado dentro do for:', resultado)
 
         Workout_a = Workout("Treino Push A", [Exercise("Supino Reto", 20),
                                               Exercise("Supino Inclinado", 20),
