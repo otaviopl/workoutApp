@@ -8,10 +8,19 @@ from workout import Workout
 from exercises import Exercise
 from kivy.uix.textinput import TextInput
 kivy.require('1.9.0')
-#TODO BD?
+from pymongo import MongoClient
+MONGODB_URL = "mongodb://localhost:27017/" 
+
 class MeuApp(App):
 
     def build(self):
+        try:
+            client= MongoClient(MONGODB_URL)
+            db=client['wkapp']
+            collection = db['workout']
+        except:
+            print('ERROR AT THE CONNECTION TO BD')
+
         Workout_a = Workout("Treino Push A", [Exercise("Supino Reto", 20),
                                               Exercise("Supino Inclinado", 20),
                                               Exercise("Desenvolvimento Militar", 16)])
