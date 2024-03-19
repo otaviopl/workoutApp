@@ -6,39 +6,67 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from workout import Workout
 from exercises import Exercise
+from kivy.uix.textinput import TextInput
 kivy.require('1.9.0')
-
+#TODO BD?
 class MeuApp(App):
+
     def build(self):
-        Workouto_a = Workout("Treino Push", [Exercise("Supino Reto", 26),
-                                        Exercise("Supino Inclinado", 24),
-                                        Exercise("Agachamento Livre", 10),
-                                        Exercise("Stiff",10),
-                                        Exercise("Banco Scott",28)])
+        Workout_a = Workout("Treino Push A", [Exercise("Supino Reto", 20),
+                                              Exercise("Supino Inclinado", 20),
+                                              Exercise("Desenvolvimento Militar", 16)])
+        
+        Workout_b = Workout("Treino Push B", [Exercise("Banco Scott", 20),
+                                              Exercise("Tríceps Corda", 20),
+                                              Exercise("Tríceps Testa", 16)])
 
-        Workouto_b = Workout("Treino Pull", [Exercise("Remada baixa", 90),
-                                        Exercise("", 20),
-                                        Exercise("Exercício 3", 35)])
+        Workout_c = Workout("Treino Pull A", [Exercise("Remada baixa", 90),
+                                              Exercise("Puxada alta aberta", 50),
+                                              Exercise("Puxada alta fechada", 45)])
+        
+        Workout_d = Workout("Treino Push B", [Exercise("Supino Reto", 20),
+                                              Exercise("Supino Inclinado", 20),
+                                              Exercise("Desenvolvimento Militar", 16),
+                                              Exercise("Stiff", 10),
+                                              Exercise("Banco Scott", 28)])
+        
+        self.layout_principal = BoxLayout(orientation='vertical')
+        self.label_Workout = Label(text="Selecione um Treino")
 
-        layout_principal = BoxLayout(orientation='vertical')
-        self.label_Workouto = Label(text="Selecione um Treino")
+        botao_Workout_a = Button(text="Push")
+        botao_Workout_a.bind(on_press=lambda instance: self.showExercises(Workout_a))
 
-        botao_Workouto_a = Button(text="Push")
-        botao_Workouto_a.bind(on_press=lambda instance: self.mostrar_Exercises(Workouto_a))
+        botao_Workout_b = Button(text="Pull")
+        botao_Workout_b.bind(on_press=lambda instance: self.showExercises(Workout_b))
 
-        botao_Workouto_b = Button(text="Pull")
-        botao_Workouto_b.bind(on_press=lambda instance: self.mostrar_Exercises(Workouto_b))
+        self.layout_principal.add_widget(self.label_Workout)
+        self.layout_principal.add_widget(botao_Workout_a)
+        self.layout_principal.add_widget(botao_Workout_b)
 
-        layout_principal.add_widget(self.label_Workouto)
-        layout_principal.add_widget(botao_Workouto_a)
-        layout_principal.add_widget(botao_Workouto_b)
+        return self.layout_principal
 
-        return layout_principal
+    def showExercises(self, workout):
+        self.layout_principal.clear_widgets()
+        self.layout_principal.add_widget(self.label_Workout)
 
-    def mostrar_Exercises(self, Workouto):
-        self.label_Workouto.text = f"Exercícios do {Workouto.name}:"
-        for Exercise in Workouto.exercises:
-            self.label_Workouto.text += f"\n{Exercise.name}: {Exercise.weight} kg"
+        self.label_Workout.text = f"Exercícios do {workout.name}:"
+        for exercise in workout.exercises:
+            label_exercise = Label(text=f"{exercise.name}: {exercise.weight} kg")
+            input_weight = TextInput(text=str(exercise.weight), multiline=False)
+            button_update = Button(text="Atualizar Peso")
+            button_update.bind(on_press=lambda instance, e=exercise, i=input_weight:
+                               self.update_weight(e, i.text))
+
+            self.layout_principal.add_widget(label_exercise)
+            self.layout_principal.add_widget(input_weight)
+            self.layout_principal.add_widget(button_update)
+
+    def update_weight(self, exercise, new_weight):
+        try:
+            exercise.weight = float(new_weight)
+            self.label_Workout.text += f"\n{exercise.name}: {exercise.weight} kg"
+        except ValueError:
+            print("Erro: Peso inválido.")
 
 
 if __name__ == '__main__':
