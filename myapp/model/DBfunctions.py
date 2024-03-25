@@ -1,6 +1,5 @@
 from pymongo import MongoClient
-from config import MONGODB_URL, DATABASE_NAME, COLLECTION_NAME
-
+from myapp.config.config import MONGODB_URL, DATABASE_NAME, COLLECTION_NAME
 
 def makeDictBd(resultadoQuery):
     treinos_exercicios={}
